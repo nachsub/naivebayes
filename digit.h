@@ -2,17 +2,22 @@
 #define name
 #include <string>
 using std::string;
+
 enum Digit {
 	one, two, three, four, five, six, seven, eight, nine
 };
+
 struct NumberImage {
 public:
 	const static int size = 28;
-	int GetSize();
 	bool data[size][size];
 	void SetData(int i, int j, bool val);
-	void LoadData(string filename, int start, int end);
+    //initializes data with values from filename
+	void LoadImage(string filename, int &start, int &end);
+    //returns true if all data values are false
+    bool isFalse();
 };
+std::ostream& operator<<(std::ostream &stream, NumberImage ni);
 #endif
 
 
