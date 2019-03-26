@@ -4,7 +4,7 @@
 using std::string;
 
 enum Digit {
-	one, two, three, four, five, six, seven, eight, nine
+	zero, one, two, three, four, five, six, seven, eight, nine
 };
 
 struct NumberImage {
