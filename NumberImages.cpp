@@ -57,17 +57,22 @@ ostream& operator<<(ostream &stream, vector<NumberImage> vect) {
 }
 
 void LoadImagesAndLabels(string s_imagefile, string s_labelfile) {
+	images = {};
+	labels = {};
+	digit_freq = {};
 	ifstream imagefile(s_imagefile);
 	ifstream labelfile(s_labelfile);
 	string str, label;
 	int i = 0;
     NumberImage image;
-	while (std::getline(imagefile, str) && std::getline(labelfile, label)) {
+	while (std::getline(imagefile, str)) {
+		if (std::getline(labelfile, label)) {
+			labels.insert(labels.end(), std::stoi(label));
+			digit_freq[(Digit) std::stoi(label)]++;
+		}
         if (i == image.size) {
             i = 0;
             images.insert(images.end(), image);
-			labels.insert(labels.end(), std::stoi(label));
-			digit_freq[(Digit) std::stoi(label)]++;
             NumberImage image;
         }
 		for (int j = 0; j < image.size; j++) {
@@ -97,7 +102,7 @@ void training() {
 			for (int k = 0; k < images.size(); k++) {
 				int f = images[k].data[i][j]; //f == 0 or 1
 				count_data[labels[k]][f]++;
-				prob_pixel[i][j][f][labels[k]] = (float) (laplace_k + count_data[labels[k]][f])/(2*laplace_k + digit_freq[(Digit) labels[k]]); 
+				prob_pixel[i][j][f][labels[k]] = (float) (laplace_k + count_data[labels[k]][f])/(2*laplace_k + digit_freq[(Digit) labels[k]]);
 			}
 		}
 	}
@@ -109,12 +114,12 @@ void classification() {
 		NumberImage image = images[k];
 		unordered_map<Digit, float> post_prob; //posterior probabilities
 		for (int dig = Digit::zero; dig <= Digit::nine; dig++) {
-			post_prob[(Digit) dig] = log(DigitProb((Digit) dig));
+			post_prob[(Digit) dig] = log(DigitProb((Digit) dig));  //log(P(class))
 			for (int i = 0; i < NumberImage::size; i++) {
 				for (int j = 0; j < NumberImage::size; j++) {
 					int f = image.data[i][j];
 					float prob_pix = prob_pixel[i][j][f][dig];
-					post_prob[(Digit) dig] *= log(prob_pix);
+					post_prob[(Digit) dig] += log(prob_pix);
 				}
 			}
 		}
@@ -126,10 +131,12 @@ void classification() {
 				max_dig = (Digit) dig;
 			}
 		}
-		if (max_dig == labels[k])
+		if (max_dig == labels[k]) {
 			success_count++;
+			//cout << "max_dig: " << max_dig << " label: " << labels[k] << endl;
+		}
 	}
-	cout << (float) success_count/labels.size();
+	cout << (float) success_count/labels.size() << endl;
 }
 
 ostream& operator<<(ostream &stream, NumberImage ni) {
@@ -146,9 +153,9 @@ ostream& operator<<(ostream &stream, NumberImage ni) {
 
 int main() {
 	LoadImagesAndLabels(train_images, train_labels);
-	cout<<images.size() << " ";
 	training();
-	//LoadImagesAndLabels(test_images, test_labels);
+	cout << DigitProb(Digit::one);
+	LoadImagesAndLabels(test_images, test_labels);
 	classification();
 }
 
