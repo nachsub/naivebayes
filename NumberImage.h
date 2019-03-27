@@ -26,6 +26,7 @@ public:
 struct Model{ 
 public:
     std::unordered_map<Digit, int> digit_freq;
+    void set_model(Model m);
     std::vector<NumberImage> images;
     std::vector<int> labels;
     float confusion[10][10];

@@ -19,6 +19,12 @@ using std::numeric_limits;
 
 //entry in row r and column c is the percentage of test images from class r that are classified as class c.
 
+Model m;
+
+void Model::set_model(Model model) {
+    m = model;
+}
+
 void Model::LoadModel(string s_imagefile, string s_labelfile) {
 	ifstream imagefile(s_imagefile), labelfile(s_labelfile);
 	string str, label;
@@ -51,7 +57,6 @@ void Model::calculate_freq(vector<int> labels) {
 }
 
 float DigitProb(Digit dig) {
-    Model m;
 	int sum = 0;
 	for (int i = Digit::zero; i <= Digit::nine; i++) {
 		sum += m.digit_freq[(Digit) i];
