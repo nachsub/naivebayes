@@ -4,7 +4,7 @@
 #include "NumberImage.h"
 using std::string;
 
-TEST_CASE("Model.cpp") {
+TEST_CASE("Model.cpp", "[test_evaluate]") {
     const int laplace_k = 1;
     Model m;
     m.LoadModel(train_images, train_labels);
@@ -36,7 +36,23 @@ TEST_CASE("Model.cpp") {
     }
 
     SECTION("test evaluate") {
-        
+        m.calculate_freq(m.labels);
+	    m.evaluate();
+        bool max_diag = true;
+        for (int i = 0; i < digit_count; i++) {
+            float max = 0;
+            float max_ind = 0;
+            for (int j = 0; j < digit_count; j++) {
+                if (m.confusion[i][j] > max) {
+                    max = m.confusion[i][j];
+                    max_ind = j;
+                }
+            }
+            if (max_ind != i)
+                max_diag = false;
+        }
+        REQUIRE(max_diag == true);
     }
 
 }
+
