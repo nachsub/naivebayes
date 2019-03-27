@@ -56,12 +56,12 @@ void Model::calculate_freq(vector<int> labels) {
 	}
 }
 
-float DigitProb(Digit dig) {
+float Model::DigitProb(Digit dig) {
 	int sum = 0;
 	for (int i = Digit::zero; i <= Digit::nine; i++) {
-		sum += m.digit_freq[(Digit) i];
+		sum += digit_freq[(Digit) i];
 	}
-	return (float) m.digit_freq[dig]/sum;
+	return (float) digit_freq[dig]/sum;
 }
 
 void Model::training() {
@@ -98,7 +98,7 @@ void Model::evaluate() {
 	}
 }
 
-void Model::classification() {
+float Model::classification() {
 	int success_count = 0;
 	for (int k = 0; k < images.size(); k++) {
 		NumberImage image = images[k];
@@ -119,6 +119,7 @@ void Model::classification() {
 			success_count++;
 	}
 	cout << (float) success_count/labels.size() << endl;
+    return (float) success_count/labels.size();
 }
 
 ostream& operator<<(ostream &stream, NumberImage ni) {

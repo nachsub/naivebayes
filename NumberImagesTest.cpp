@@ -24,12 +24,19 @@ TEST_CASE("Model.cpp") {
 
     SECTION("test DigitProb") {
         m.set_model(m);
-        float prob = DigitProb(Digit::one);
+        float prob = m.DigitProb(Digit::one);
         REQUIRE(prob == 0.1126f);
     }
 
-    SECTION("test MaxDig") {
-        m.classification();
+    SECTION("test classification") {
+        m.training();
+	    m.LoadModel(test_images, test_labels);
+	    float success = m.classification();
+        REQUIRE(success == 0.72467f);
+    }
+
+    SECTION("test evaluate") {
+        
     }
 
 }

@@ -23,7 +23,7 @@ public:
 	bool data[size][size];
 };
 
-struct Model{ 
+struct Model { 
 public:
     std::unordered_map<Digit, int> digit_freq;
     void set_model(Model m);
@@ -35,9 +35,11 @@ public:
     void calculate_freq(std::vector<int> labels);
     //loads images from imagefile and labels from labelfile
     void LoadModel(std::string s_imagefile, std::string s_labelfile);
+    //calculates the probability of dig
+    float DigitProb(Digit dig);
     void training();
     void evaluate();
-    void classification();
+    float classification();
 };
 
 #endif
