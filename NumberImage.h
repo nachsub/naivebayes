@@ -3,21 +3,29 @@
 #include <ostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 //number of digits
 const int digit_count = 10;
 //number of features
 const int feature_count = 2;
 
+const int laplace_k = 1;
+
+const std::string train_images = "digitdata/trainingimages";
+const std::string train_labels = "digitdata/traininglabels"; 
+const std::string test_labels = "digitdata/testlabels";
+const std::string test_images = "digitdata/testimages";
+
 struct NumberImage {
 public:
 	const static int size = 28;
 	bool data[size][size];
 };
-std::ostream& operator<<(std::ostream &stream, NumberImage image);
 
 struct Model{ 
 public:
+    std::unordered_map<Digit, int> digit_freq;
     std::vector<NumberImage> images;
     std::vector<int> labels;
     float confusion[10][10];
